@@ -131,15 +131,16 @@ export function isValidHex(value: string): boolean {
   return normalizeHex(value) !== null;
 }
 
-export function getBackgroundGradient(hex: string): string {
+export function getBackgroundGradient(hex: string, dark = false): string {
   const base = chroma(hex);
-  const lighter = base.brighten(0.6).alpha(0.35).css();
-  const darker = base.darken(0.4).alpha(0.25).css();
+  const lighter = (dark ? base.darken(1) : base.brighten(0.6)).alpha(dark ? 0.3 : 0.35).css();
+  const darker = (dark ? base.darken(2.5) : base.darken(0.4)).alpha(dark ? 0.4 : 0.25).css();
   return `linear-gradient(135deg, ${lighter} 0%, ${darker} 100%)`;
 }
 
-export function getContrastText(hex: string): "text-white" | "text-neutral-900" {
-  return chroma.contrast(hex, "white") >= 4.5 ? "text-white" : "text-neutral-900";
+/** Fixed (theme-independent) text colors, so they stay readable on the swatch in dark mode. */
+export function getContrastText(hex: string): "text-[#ffffff]" | "text-[#171717]" {
+  return chroma.contrast(hex, "white") >= 4.5 ? "text-[#ffffff]" : "text-[#171717]";
 }
 
 export function getColorKey(hex: string, opacity: number): string {

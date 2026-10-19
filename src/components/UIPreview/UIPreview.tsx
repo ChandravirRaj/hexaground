@@ -2,7 +2,6 @@
 
 import chroma from "chroma-js";
 
-import { GlassPanel } from "@/components/ui/GlassPanel";
 import { useSelectedColorStrings } from "@/store/useColorStore";
 import { getContrastText } from "@/utils/color";
 import { cn } from "@/lib/cn";
@@ -13,7 +12,7 @@ export function UIPreview() {
   const tintedBg = chroma(hex).alpha(0.12).css();
 
   return (
-    <GlassPanel title="Live UI Preview" contentClassName="p-4">
+    <div>
       <div
         aria-label="Live UI preview"
         className={cn(
@@ -64,6 +63,6 @@ export function UIPreview() {
           Badge
         </span>
       </div>
-    </GlassPanel>
+    </div>
   );
 }

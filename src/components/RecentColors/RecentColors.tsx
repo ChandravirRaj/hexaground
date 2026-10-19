@@ -3,7 +3,9 @@
 import { memo } from "react";
 import { motion } from "framer-motion";
 
-import { GlassPanel } from "@/components/ui/GlassPanel";
+import { Clock } from "lucide-react";
+
+import { EmptyState } from "@/components/ui/EmptyState";
 import { useColorStore, useRecentColors } from "@/store/useColorStore";
 import { cn } from "@/lib/cn";
 
@@ -50,32 +52,25 @@ export function RecentColors() {
   const recentColors = useRecentColors();
 
   return (
-    <GlassPanel
-      title="Recent Colors"
-      contentClassName="p-4"
-      className="shrink-0"
-    >
-      <section aria-label="Recent colors">
-        {recentColors.length === 0 ? (
-          <p className="text-xs text-neutral-500">Colors you pick will appear here.</p>
-        ) : (
-          <div className="flex items-center gap-3">
-            <div className="flex flex-1 gap-2 overflow-x-auto pb-0.5">
-              {recentColors.map((color, index) => (
-                <MemoizedChip
-                  key={`${color.hex}-${color.opacity}-${color.timestamp}`}
-                  hex={color.hex}
-                  opacity={color.opacity}
-                  index={index}
-                />
-              ))}
-            </div>
-            <span className="shrink-0 text-[10px] tabular-nums text-neutral-400">
-              {recentColors.length}
-            </span>
-          </div>
-        )}
-      </section>
-    </GlassPanel>
+    <section aria-label="Recent colors">
+      {recentColors.length === 0 ? (
+        <EmptyState
+          icon={Clock}
+          title="No recent colors"
+          hint="Colors you pick will show up here."
+        />
+      ) : (
+        <div className="flex flex-wrap gap-2">
+          {recentColors.map((color, index) => (
+            <MemoizedChip
+              key={`${color.hex}-${color.opacity}-${color.timestamp}`}
+              hex={color.hex}
+              opacity={color.opacity}
+              index={index}
+            />
+          ))}
+        </div>
+      )}
+    </section>
   );
 }

@@ -8,7 +8,7 @@ export function ColorPicker() {
   return (
     <section
       aria-label="Interactive color picker"
-      className="grid min-h-0 flex-1 grid-rows-[minmax(72px,1fr)_auto_auto] gap-3 md:grid-rows-[minmax(90px,1fr)_auto_auto]"
+      className="grid min-h-[230px] flex-1 grid-rows-[minmax(72px,1fr)_auto_auto] gap-3 md:grid-rows-[minmax(90px,1fr)_auto_auto]"
     >
       <SaturationPicker />
       <HueSlider />

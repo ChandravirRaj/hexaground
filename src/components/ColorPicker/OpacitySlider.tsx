@@ -36,7 +36,7 @@ export function OpacitySlider() {
         onPointerMove={handlePointerMove}
         onKeyDown={handleKeyDown}
         className={cn(
-          "relative h-4 w-full cursor-pointer overflow-hidden rounded-full ring-1 ring-neutral-200/80",
+          "relative h-4 w-full cursor-pointer touch-none select-none overflow-hidden rounded-full ring-1 ring-neutral-200/80",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2"
         )}
       >

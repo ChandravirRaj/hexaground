@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import chroma from "chroma-js";
 
 import { useColorStore, useHue, useLightness, useSaturation } from "@/store/useColorStore";
@@ -17,6 +17,13 @@ export function SaturationPicker() {
   const setColor = useColorStore((s) => s.setColor);
   const trackRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
+
+  useEffect(
+    () => () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    },
+    []
+  );
 
   const updateFromPointer = useCallback(
     (clientX: number, clientY: number) => {
@@ -87,7 +94,7 @@ export function SaturationPicker() {
       onPointerMove={handlePointerMove}
       onKeyDown={handleKeyDown}
       className={cn(
-        "relative h-full min-h-[80px] w-full cursor-crosshair overflow-hidden rounded-lg",
+        "relative h-full min-h-[80px] w-full cursor-crosshair touch-none select-none overflow-hidden rounded-lg",
         "shadow-inner focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2"
       )}
       style={{

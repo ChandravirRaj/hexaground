@@ -1,37 +1,31 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import chroma from "chroma-js";
-import { X } from "lucide-react";
+import { Heart, X } from "lucide-react";
 
 import { CopyButton } from "@/components/CopyButton/CopyButton";
-import { GlassPanel } from "@/components/ui/GlassPanel";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { useColorStore, useFavoriteColors } from "@/store/useColorStore";
+import { useSettingsStore } from "@/store/useSettingsStore";
+import { FORMAT_LABELS, formatColor } from "@/utils/formats";
 import { cn } from "@/lib/cn";
-
-function favoriteToRgba(hex: string, opacity: number) {
-  const [r, g, b] = chroma(hex).rgb();
-  return `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${parseFloat(opacity.toFixed(2))})`;
-}
 
 export function FavoriteColors() {
   const favorites = useFavoriteColors();
   const loadColor = useColorStore((s) => s.loadColor);
   const removeFavorite = useColorStore((s) => s.removeFavorite);
+  const defaultFormat = useSettingsStore((s) => s.defaultFormat);
 
   return (
-    <GlassPanel
-      title="Favorite Colors"
-      className="flex min-h-0 flex-1 flex-col md:overflow-hidden"
-      contentClassName="flex min-h-0 flex-1 flex-col p-4 md:overflow-hidden"
-    >
-      <section aria-label="Favorite colors" className="flex min-h-0 flex-1 flex-col">
+    <section aria-label="Favorite colors">
         {favorites.length === 0 ? (
-          <p className="text-xs text-neutral-500">
-            Save colors you love to access them quickly.
-          </p>
+          <EmptyState
+            icon={Heart}
+            title="No favorites yet"
+            hint="Tap Add to Favorites to keep a color handy."
+          />
         ) : (
-          <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto md:max-h-[140px] lg:max-h-none">
+          <div className="flex flex-col gap-2">
             <AnimatePresence mode="popLayout">
               {favorites.map((favorite) => (
                 <motion.div
@@ -65,8 +59,8 @@ export function FavoriteColors() {
 
                   <div className="flex shrink-0 items-center gap-1">
                     <CopyButton
-                      value={favoriteToRgba(favorite.hex, favorite.opacity)}
-                      label={`${favorite.hex} RGBA`}
+                      value={formatColor(favorite.hex, favorite.opacity, defaultFormat)}
+                      label={`${favorite.hex} ${FORMAT_LABELS[defaultFormat]}`}
                       className="h-8 w-8"
                     />
                     <button
@@ -87,7 +81,6 @@ export function FavoriteColors() {
             </AnimatePresence>
           </div>
         )}
-      </section>
-    </GlassPanel>
+    </section>
   );
 }

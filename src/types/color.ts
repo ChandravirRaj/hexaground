@@ -20,9 +20,26 @@ export interface FavoriteColor {
   savedAt: number;
 }
 
+export interface PaletteColor {
+  hex: string;
+  opacity: number;
+}
+
+export interface Palette {
+  id: string;
+  name: string;
+  colors: PaletteColor[];
+  createdAt: number;
+  updatedAt: number;
+  favorite?: boolean;
+  /** Manual position within the favorite / non-favorite group (lower first). */
+  order?: number;
+}
+
+/** #287D8A */
 export const DEFAULT_COLOR: ColorState = {
-  hue: 223,
-  saturation: 100,
-  lightness: 65,
+  hue: 188,
+  saturation: 55,
+  lightness: 35,
   opacity: 1,
 };

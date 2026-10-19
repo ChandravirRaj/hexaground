@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { persist } from "zustand/middleware";
 import { useShallow } from "zustand/react/shallow";
 
 import type { ColorState, FavoriteColor, RecentColor } from "@/types/color";
@@ -14,7 +14,7 @@ import {
   parseColorInput,
   parseAnyColorInput,
 } from "@/utils/color";
-import { STORAGE_KEYS } from "@/utils/storage";
+import { createGuardedStorage, STORAGE_KEYS } from "@/utils/storage";
 import chroma from "chroma-js";
 
 const MAX_RECENT = 20;
@@ -51,6 +51,8 @@ function applyColorState(state: ColorState): Partial<ColorStore> {
   };
 }
 
+const guarded = createGuardedStorage();
+
 export const useColorStore = create<ColorStore>()(
   persist(
     (set, get) => ({
@@ -59,23 +61,36 @@ export const useColorStore = create<ColorStore>()(
       favoriteColors: [],
 
       setColor: (hue, saturation, lightness) => {
-        set(applyColorState({ ...get(), hue, saturation, lightness }));
+        const next = applyColorState({ ...get(), hue, saturation, lightness });
+        const current = get();
+        if (
+          next.hue === current.hue &&
+          next.saturation === current.saturation &&
+          next.lightness === current.lightness
+        ) {
+          return;
+        }
+        set(next);
       },
 
       setHue: (hue) => {
-        set({ hue: clamp(hue, 0, 360) });
+        const next = clamp(hue, 0, 360);
+        if (next !== get().hue) set({ hue: next });
       },
 
       setSaturation: (saturation) => {
-        set({ saturation: clamp(saturation, 0, 100) });
+        const next = clamp(saturation, 0, 100);
+        if (next !== get().saturation) set({ saturation: next });
       },
 
       setLightness: (lightness) => {
-        set({ lightness: clamp(lightness, 0, 100) });
+        const next = clamp(lightness, 0, 100);
+        if (next !== get().lightness) set({ lightness: next });
       },
 
       setOpacity: (opacity) => {
-        set({ opacity: clamp(opacity, 0, 1) });
+        const next = clamp(opacity, 0, 1);
+        if (next !== get().opacity) set({ opacity: next });
       },
 
       setFromHex: (hex) => {
@@ -176,7 +191,8 @@ export const useColorStore = create<ColorStore>()(
           favoriteColors: stored?.favoriteColors ?? current.favoriteColors,
         };
       },
-      storage: createJSONStorage(() => localStorage),
+      storage: guarded.storage,
+      onRehydrateStorage: () => guarded.markHydrated,
       skipHydration: true,
     }
   )

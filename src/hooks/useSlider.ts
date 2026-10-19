@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 interface UseSliderOptions {
   value: number;
@@ -23,6 +23,13 @@ export function useSlider({
 }: UseSliderOptions) {
   const trackRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
+
+  useEffect(
+    () => () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    },
+    []
+  );
 
   const valueFromEvent = useCallback(
     (clientX: number, clientY: number) => {

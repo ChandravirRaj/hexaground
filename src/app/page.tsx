@@ -1,5 +1,5 @@
-import { HexellyApp } from "@/components/HexellyApp";
+import { HexagroundApp } from "@/components/HexagroundApp";
 
 export default function Home() {
-  return <HexellyApp />;
+  return <HexagroundApp />;
 }

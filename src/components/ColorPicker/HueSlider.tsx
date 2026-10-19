@@ -35,7 +35,7 @@ export function HueSlider() {
         onPointerMove={handlePointerMove}
         onKeyDown={handleKeyDown}
         className={cn(
-          "relative h-4 w-full cursor-pointer rounded-full",
+          "relative h-4 w-full cursor-pointer touch-none select-none rounded-full",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2"
         )}
         style={{
